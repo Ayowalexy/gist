@@ -1,0 +1,10 @@
+pids
+*.pid
+*.seed
+*.pid.lock
+
+node_modules/
+jspm_packages/
+.npm
+.env
+.env.test
