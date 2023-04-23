@@ -27,9 +27,18 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "user"
     }],
-    total_income: Number,
-    total_withdrawal: Number,
-    total_balance: Number,
+    total_income: {
+        type: Number,
+        default: 0
+    },
+    total_withdrawal: {
+        type: Number,
+        default: 0
+    },
+    total_balance: {
+        type: Number,
+        default: 0
+    },
     bank: {
         type: Schema.Types.ObjectId,
         ref: 'bank'
@@ -40,7 +49,7 @@ const userSchema = new Schema({
     }],
     bookmarks: [{
         type: Object
-    }], 
+    }],
     userImg: {
         type: String,
         default: ""

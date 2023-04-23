@@ -9,8 +9,14 @@ const hireSchema = new Schema({
     chargePerHour: Number,
     totalAmount: Number,
     partPayment: Number,
-    handyManId: String,
-    clientId: String,
+    handyManId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    },
+    clientId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    },
     txtRef: String,
     hoursPaid: Number,
     cancelReason: {

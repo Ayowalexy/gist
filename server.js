@@ -10,6 +10,7 @@ const {errorHandler, notFound} = require('./middleswares/errorhandler')
 const logger = require('./middleswares/logger')
 const session = require('express-session')
 
+
 //import routes
 const Authroutes = require('./routes/authRoutes');
 const UserRoutes = require('./routes/useroutes')

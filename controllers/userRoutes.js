@@ -85,7 +85,9 @@ const hireHandyMan = asyncHandler(async (req, res) => {
                 chargePerHour: handyMan.serviceCharge,
                 totalAmount: totalAmount,
                 partPayment: Math.floor(totalAmount / 2),
-                status: 'hired'
+                status: 'hired',
+                handyManId: handyMan,
+                clientId: client
             })
 
             const handyManNotification = new Notification({
@@ -188,14 +190,34 @@ const cancelHandyManHire = asyncHandler(async (req, res) => {
 const getAllCustomerHires = asyncHandler(async (req, res) => {
 
 
-    const hires = await Hire.find({ clientId: req.user._id });
+    const hires = await Hire.find().populate('clientId').populate('handyManId')
+    const data = hires?.filter(ele => ele?.clientId?._id.toString() === req.user?.id)
+
+    console.log(req.user?._id)
+    if (hires) {
+        res.status(200)
+            .json(
+                {
+                    status: "success",
+                    data: data,
+                    meta: {}
+                })
+    }
+
+})
+
+const getAllHandymanHires = asyncHandler(async (req, res) => {
+
+
+    const hires = await Hire.find().populate('clientId').populate('handyManId')
+    const data = hires?.filter(ele => ele?.handyManId?._id.toString() === req.user?.id)
 
     if (hires) {
         res.status(200)
             .json(
                 {
                     status: "success",
-                    data: hires,
+                    data: data,
                     meta: {}
                 })
     }
@@ -255,11 +277,11 @@ const getAllNotification = asyncHandler(async (req, res) => {
 const getOneHireDetails = asyncHandler(async (req, res) => {
 
     const hire = await Hire.findById({ _id: req.params.id });
+
     if (hire) {
         let data = {}
         if (req.user._id.toString() === hire.clientId) {
             const hirer = await User.findById({ _id: hire.clientId });
-
             data = {
                 hirer: {
                     firstName: hirer.firstName,
@@ -292,6 +314,13 @@ const getOneHireDetails = asyncHandler(async (req, res) => {
                     status: "success",
                     data: data,
                     meta: {}
+                })
+    }else {
+        res.status(401)
+            .json(
+                {
+                    status: "error",
+                    meta: {error: 'user not found'}
                 })
     }
 
@@ -365,6 +394,31 @@ const updatehandyManWorkHour = asyncHandler(async (req, res) => {
     }
 })
 
+const getOneHandyManDetails = asyncHandler (async(req, res) => {
+    const oneHandyMan = await User.findById({_id: req.params?.id});
+    if(oneHandyMan){
+        res.status(200)
+            .json(
+                {
+                    status: "success",
+                    data: oneHandyMan,
+                    meta: {}
+                })
+    } else {
+        res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: 'User not found'
+                    }
+                })
+    }
+})
+
+
 module.exports = {
     getAllHandyman,
     searchHandyMan,
@@ -375,5 +429,8 @@ module.exports = {
     cancelHandyManHire,
     getAllCustomerHires,
     getOneHireDetails,
-    updatehandyManWorkHour
+    updatehandyManWorkHour,
+    getOneHandyManDetails,
+    getAllHandymanHires
 }
+

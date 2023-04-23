@@ -61,9 +61,9 @@ const addInformation = asyncHandlers(async (req, res) => {
 
 const addServiceCharge = asyncHandlers(async (req, res) => {
 
-    const { _id } = req.user._id
+    const { id } = req.params
+    const user = await User.findById({ _id: id });
 
-    const user = await User.findById({ _id });
 
 
     if (user && user.isHandyMan) {
@@ -142,15 +142,37 @@ const getProfileInformation = asyncHandlers(async (req, res) => {
     const post = await Post.find({ createdBy: { $exists: true, $in: [`${req.params.id}`] } });
     const comment = await Comment.find({ createdBy: { $exists: true, $in: [`${req.params.id}`] } });
 
+    const userData = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+        email: user.email,
+        dateOfBirth: user.dateOfBirth,
+        gender: user.gender,
+        state: user.state,
+        city: user.city,
+        location: user.location,
+        about: user.about,
+        clients: user.clients,
+        total_income: user.total_income,
+        total_withdrawal: user.total_withdrawal,
+        total_balance: user.total_balance,
+        bank: user.bank,
+        hires: user.hires,
+        bookmarks: user.bookmarks, 
+        userImg: user.userImg,
+        experience: user.experience,
+        portfolioImages: user.portfolioImages,
+        notifications: user.notifications,
+        isHandyMan: user.isHandyMan,
+        rating: user.rating,
+        ratedBy: user.ratedBy,
+        serviceCharge: user.serviceCharge,
+        post: user.post,
+        _id: user._id
+    }
     const data = {
-        // firstName: user.firstName,
-        // lastName: user.lastName,
-        // phoneNumber: user.phoneNumber,
-        // email: user.email,
-        // portfolioImages: user.portfolioImages,
-        // post: user.post,
-        // isHandyMan: user.isHandyMan,
-        user,
+        user: userData,
         postCommented: post,
         commentReplied: comment
     }

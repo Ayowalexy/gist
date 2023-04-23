@@ -100,8 +100,8 @@ const postSchema = Joi.object({
 
 const commentSchema = Joi.object({
     userImg: Joi
-        .string()
-        .required(),
+        .string(),
+    // .required(),
     name: Joi
         .string()
         .required(),
@@ -247,6 +247,30 @@ const bankAccountSchema = Joi.object({
         .required()
 })
 
+const updateProfileSchema = Joi.object({
+    firstName: Joi
+        .string()
+        .required(),
+    lastName: Joi
+        .string()
+        .required(),
+    phoneNumber: Joi
+        .string()
+        .required(),
+    gender: Joi
+        .string()
+        .required(),
+    state: Joi
+        .string()
+        .required(),
+    city: Joi
+        .string()
+        .required(),
+    userImg: Joi
+        .any()
+
+})
+
 module.exports = {
     profileInformationSchema,
     userAccountSignupSchema,
@@ -264,6 +288,7 @@ module.exports = {
     cancelHireSchema,
     bookmarkSchema,
     updatehandyManWorkHourSchema,
-    bankAccountSchema
+    bankAccountSchema,
+    updateProfileSchema
 
 }

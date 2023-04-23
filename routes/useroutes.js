@@ -18,7 +18,9 @@ const {
         cancelHandyManHire,
         getAllCustomerHires,
         getOneHireDetails,
-        updatehandyManWorkHour
+        updatehandyManWorkHour,
+        getOneHandyManDetails,
+        getAllHandymanHires
 } = require('../controllers/userRoutes')
 
 router.route('/profile/:id')
@@ -29,6 +31,8 @@ router.route('/profile/:id')
 router.route('/handyman')
         .get(protect, getAllHandyman)
 
+router.route('/get-one-handyman/:id').get(protect, getOneHandyManDetails)
+
 router.route('/handyman/:id')
         .patch(protect, isHandyMan, cancelHandyManHire)
 
@@ -36,6 +40,8 @@ router.route('/filter').get(protect, filterHandyMan)
 router.route('/hire')
         .post(protect, isCustomer, hireHandyMan)
         .get(protect, isCustomer, getAllCustomerHires)
+
+router.route('/all-handyman-hire').get(protect, isHandyMan, getAllHandymanHires)
 
 router.route('/bookmark')
         .post(protect, bookmark)
@@ -49,8 +55,8 @@ router.route('/notification')
         .post(protect, createNotification)
         .get(protect, getAllNotification)
 
-router.route('/service-charge')
-        .put(protect, isHandyMan, addServiceCharge)
+router.route('/service-charge/:id')
+        .put(addServiceCharge)
 
 
 module.exports = router

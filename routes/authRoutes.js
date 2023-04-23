@@ -5,8 +5,10 @@ const {
     login,
     getPasswordResetToken,
     verifyOtp,
-    resetPassword
- } = require('../controllers/authControllers')
+    resetPassword,
+    updateProfile
+ } = require('../controllers/authControllers');
+const { protect } = require('../middleswares/authMiddlewares.js');
 
 
 router.route('/signup').post(createAccount);
@@ -14,6 +16,7 @@ router.route('/login').post(login);
 router.route('/reset').post(getPasswordResetToken)
 router.route('/reset-password').patch(resetPassword)
 router.route('/verify-otp').post(verifyOtp)
+router.route('/update-profile').post(protect, updateProfile)
 
 
 

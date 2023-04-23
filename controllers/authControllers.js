@@ -2,7 +2,7 @@ const asyncHandlers = require('express-async-handler');
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
-const { userAccountSignupSchema, emailSchema, otpSchema, passwordSchema } = require('../middleswares/schema');
+const { userAccountSignupSchema, emailSchema, otpSchema, passwordSchema, updateProfileSchema } = require('../middleswares/schema');
 const sgMail = require('@sendgrid/mail');
 const otpGenerator = require('otp-generator');
 
@@ -57,6 +57,7 @@ const login = asyncHandlers(async (req, res) => {
                             _id: user._id,
                             email: user.email,
                             token: token,
+                            isHandyMan: user.isHandyMan,
                             status: "success",
                             meta: {}
                         })
@@ -320,10 +321,40 @@ const resetPassword = asyncHandlers(async (req, res) => {
     }
 })
 
+
+const updateProfile = asyncHandlers(async (req, res) => {
+
+    const { error, value } = updateProfileSchema.validate(req.body);
+
+    if (error) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: error.message
+                    }
+                })
+    }
+
+    await User.findOneAndUpdate({ _id: req.user._id?.toString() }, { ...value })
+    res
+        .status(200)
+        .json(
+            {
+                status: "success",
+                message: "profile updated successfully",
+                meta: {}
+            })
+})
+
 module.exports = {
     createAccount,
     login,
     getPasswordResetToken,
     verifyOtp,
-    resetPassword
+    resetPassword,
+    updateProfile
 }
