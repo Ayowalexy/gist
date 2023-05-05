@@ -169,7 +169,8 @@ const getProfileInformation = asyncHandlers(async (req, res) => {
         ratedBy: user.ratedBy,
         serviceCharge: user.serviceCharge,
         post: user.post,
-        _id: user._id
+        _id: user._id,
+        accountBalance: user.accountBalance
     }
     const data = {
         user: userData,

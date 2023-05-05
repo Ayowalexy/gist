@@ -59,6 +59,7 @@ const filterHandyMan = asyncHandler(async (req, res) => {
 const hireHandyMan = asyncHandler(async (req, res) => {
 
     const { error, value } = hireSchema.validate(req.body);
+    console.log(req.body)
     if (error) {
         return res
             .status(401)
@@ -78,6 +79,14 @@ const hireHandyMan = asyncHandler(async (req, res) => {
     if (handyMan && client) {
         const charge = handyMan.serviceCharge;
         if (charge) {
+
+            if(Number(client.accountBalance) < Number(value.amount)){
+                throw new Error('Insufficient balance')
+            }
+
+            handyMan.accountBalance = Number(handyMan.accountBalance) + Number(value.amount);
+            client.accountBalance = Number(client.accountBalance) - Number(value.amount);
+
             const totalAmount = Number(charge) * Number(value.workingHours);
 
             const newHire = new Hire({

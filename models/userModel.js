@@ -12,6 +12,13 @@ const userSchema = new Schema({
         unique: true,
         index: true
     },
+    accountBalance: {
+        type: Number,
+        default: 0
+    },
+    debitAccount:[ {
+        type: Object,
+    }],
     password: String,
     dateOfBirth: Date,
     gender: String,

@@ -62,7 +62,7 @@ const isHandyMan = asyncHandler( async (req, res, next) => {
 
 
 const isCustomer = asyncHandler( async (req, res, next) => {
-    console.log(req.user.isHandyMan)
+    console.log(req.user && !req.user.isHandyMan)
     if (req.user && !req.user.isHandyMan) {
         next()
       } else {

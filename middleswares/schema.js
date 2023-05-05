@@ -174,6 +174,9 @@ const hireSchema = Joi.object({
         .required(),
     clientId: Joi
         .string()
+        .required(),
+    amount: Joi
+        .number()
         .required()
 
 })
