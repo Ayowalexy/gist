@@ -81,6 +81,7 @@ const userSchema = new Schema({
         type: Number,
         default: 0
     },
+    serviceCategory: String,
     serviceCharge: {
         type: Number,
         min: [1, 'Service charge too small'],

@@ -62,6 +62,9 @@ const handyManprofileInformationSchema = Joi.object({
         .required(),
     isHandyMan: Joi
         .boolean()
+        .required(),
+    serviceCategory: Joi
+        .string()
         .required()
 
 })
