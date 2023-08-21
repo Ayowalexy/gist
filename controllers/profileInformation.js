@@ -134,6 +134,25 @@ const updateHandymanPortfolio = asyncHandlers(async (req, res) => {
 
 })
 
+const addImages = asyncHandlers(async( req, res) => {
+    const { id } = req.params;
+    await User.findByIdAndUpdate({ _id: id },
+        {
+            $push:
+                { portfolioImages: req.body.images }
+        }
+    )
+    res.status(200)
+        .json(
+            {
+                status: "success",
+                message: "Images added",
+                meta: {}
+            })
+
+
+})
+
 
 const getProfileInformation = asyncHandlers(async (req, res) => {
 
@@ -247,5 +266,6 @@ module.exports = {
     updateHandymanPortfolio,
     getProfileInformation,
     bookmark,
-    getAllBookmarks
+    getAllBookmarks,
+    addImages
 }

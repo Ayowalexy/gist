@@ -7,7 +7,8 @@ const {
         updateHandymanPortfolio,
         getProfileInformation,
         bookmark,
-        getAllBookmarks
+        getAllBookmarks,
+        addImages
 } = require('../controllers/profileInformation');
 const {
         getAllHandyman,
@@ -20,13 +21,18 @@ const {
         getOneHireDetails,
         updatehandyManWorkHour,
         getOneHandyManDetails,
-        getAllHandymanHires
+        getAllHandymanHires,
+
 } = require('../controllers/userRoutes')
+
 
 router.route('/profile/:id')
         .put(addInformation)
         .patch(protect, isHandyMan, updateHandymanPortfolio)
         .get(protect, getProfileInformation)
+
+router.route('/images/:id')
+        .patch(protect, isHandyMan, addImages)
 
 router.route('/handyman')
         .get(protect, getAllHandyman)

@@ -427,6 +427,10 @@ const getOneHandyManDetails = asyncHandler (async(req, res) => {
     }
 })
 
+const getAllCategories = asyncHandler( async( req, res ) => {
+    
+})
+
 
 module.exports = {
     getAllHandyman,

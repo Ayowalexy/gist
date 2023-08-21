@@ -4,7 +4,7 @@ const PASSWORD = process.env.PASSWORD;
 const DATABASE = process.env.DATABASE
 
 
-const DB = process.env.MONGODB_URI
+const DB = process.env.MONGODB_URI_TEST
 
 const connectDB = async () => {
     try {

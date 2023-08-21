@@ -202,9 +202,9 @@ const handyManPortfolio = Joi.object({
     images: Joi
         .string()
         .required(),
-    about: Joi
-        .string()
-        .required()
+    // about: Joi
+    //     .string()
+    //     .required()
 })
 
 

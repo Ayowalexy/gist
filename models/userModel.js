@@ -16,7 +16,7 @@ const userSchema = new Schema({
         type: Number,
         default: 0
     },
-    debitAccount:[ {
+    debitAccount: [{
         type: Object,
     }],
     password: String,
@@ -94,7 +94,11 @@ const userSchema = new Schema({
     post: [{
         type: Schema.Types.ObjectId,
         ref: 'post'
-    }]
+    }],
+    messages: [{
+        type: Schema.Types.ObjectId,
+        ref: 'message'
+    }],
 }, {
     timestamps: true
 })
