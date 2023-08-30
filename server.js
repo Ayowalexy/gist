@@ -18,6 +18,7 @@ const Authroutes = require('./routes/authRoutes');
 const UserRoutes = require('./routes/useroutes')
 const PostRoutes = require('./routes/postRoutes')
 const TransferRoutes = require('./routes/transferRoutes');
+const StoreRoutes = require('./routes/storeRoutes');
 
 
 const sessionConfig = {
@@ -62,7 +63,8 @@ app.get('/', (req, res) => {
 app.use('/api/user', Authroutes);
 app.use('/api/user', UserRoutes);
 app.use('/api/post', PostRoutes);
-app.use('/api/bank', TransferRoutes)
+app.use('/api/bank', TransferRoutes);
+app.use('/api/store', StoreRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -11,13 +11,13 @@ const {
 } = require('../controllers/transferControllers');
 
 
-router.route('/')
-    .get(protect, getAllBanks)
-    .post(protect, verifyBankAccount)
+router.route('/:id')
+    .get( getAllBanks)
+    .post( verifyBankAccount)
 
 router.route('/complete').patch(protect, isCustomer, payForHandyManHire)
 router.route('/fund').post(webhook)
-router.route('/add-bank').post(protect, addBankAccount)
+router.route('/add-bank/:id').post(addBankAccount)
 router.route('/pay-handyman').post(protect, payHandyman)
 
 module.exports = router
