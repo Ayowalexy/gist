@@ -12,7 +12,8 @@ const {
   addNewProperty,
   updateProperty,
   deleteProperty,
-  getOneProperty
+  getOneProperty,
+  getSingleStore
 } = require("../controllers/storeController");
 const multer = require("multer");
 const { storage } = require("../cloudinary");
@@ -22,6 +23,9 @@ const upload = multer({ storage: storage });
 const { protect } = require("../middleswares/authMiddlewares");
 
 router.route("/").post(protect, createStore).get(protect, getStores);
+
+router.route("/one-store/:id").get(protect, getSingleStore)
+
 
 router.route("/item").post(protect, upload.array("images"), addItem);
 

@@ -31,6 +31,13 @@ const getStore = asyncHandler(async (req, res) => {
   res.status(200).json(user.store);
 });
 
+const getSingleStore = asyncHandler(
+  async (req, res) => {
+    const stores = await Store.find({ _id: req.params.id }).populate("items");
+    res.status(200).json(stores);
+  }
+);
+
 const getStores = asyncHandler(async (req, res) => {
   const stores = await Store.find().populate("items");
   res.status(200).json(stores);
@@ -88,13 +95,12 @@ const getOneItem = asyncHandler(async (req, res) => {
 
 const addNewProperty = asyncHandler(async (req, res) => {
   const property_images = req.files.map((file) => file.path);
-  
 
   const payload = {
     ...req.body,
     property_images,
   };
-  payload.details = JSON.parse(payload.details)
+  payload.details = JSON.parse(payload.details);
 
   const { error, value } = propertiesSchema.validate(payload);
   if (error) throw error.details[0].message;
@@ -145,4 +151,5 @@ module.exports = {
   getOneProperty,
   updateProperty,
   deleteProperty,
+  getSingleStore,
 };
