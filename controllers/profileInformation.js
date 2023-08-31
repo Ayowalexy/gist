@@ -129,11 +129,11 @@ const addImages = asyncHandlers(async (req, res) => {
 
 const getProfileInformation = asyncHandlers(async (req, res) => {
   const user = await User.findById({ _id: req.params.id }).populate({
-    path: "post properties store",
+    path: "post store",
     populate: {
       path: "items",
     },
-  });
+  }).populate('properties')
   const post = await Post.find({
     createdBy: { $exists: true, $in: [`${req.params.id}`] },
   });
