@@ -129,7 +129,7 @@ const addImages = asyncHandlers(async (req, res) => {
 
 const getProfileInformation = asyncHandlers(async (req, res) => {
   const user = await User.findById({ _id: req.params.id }).populate({
-    path: "post store",
+    path: "post store properties",
     populate: {
       path: "items",
     },
