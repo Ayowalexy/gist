@@ -12,6 +12,7 @@ const {
   addNewProperty,
   updateProperty,
   deleteProperty,
+  getOneProperty
 } = require("../controllers/storeController");
 const multer = require("multer");
 const { storage } = require("../cloudinary");
@@ -38,6 +39,9 @@ router
 router
   .route("/property/:id")
   .patch(protect, updateProperty)
-  .delete(protect, deleteProperty);
+  .delete(protect, deleteProperty)
+  .get(protect, getOneProperty)
+
+
 
 module.exports = router;
