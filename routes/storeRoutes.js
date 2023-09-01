@@ -13,7 +13,8 @@ const {
   updateProperty,
   deleteProperty,
   getOneProperty,
-  getSingleStore
+  getSingleStore,
+  allProperties,
 } = require("../controllers/storeController");
 const multer = require("multer");
 const { storage } = require("../cloudinary");
@@ -24,8 +25,7 @@ const { protect } = require("../middleswares/authMiddlewares");
 
 router.route("/").post(protect, createStore).get(protect, getStores);
 
-router.route("/one-store/:id").get(protect, getSingleStore)
-
+router.route("/one-store/:id").get(protect, getSingleStore);
 
 router.route("/item").post(protect, upload.array("images"), addItem);
 
@@ -40,12 +40,12 @@ router
   .get(protect, getAllUserProperties)
   .post(protect, upload.array("property_images"), addNewProperty);
 
+router.route("/all-properties").get(protect, allProperties);
+
 router
   .route("/property/:id")
   .patch(protect, updateProperty)
   .delete(protect, deleteProperty)
-  .get(protect, getOneProperty)
-
-
+  .get(protect, getOneProperty);
 
 module.exports = router;

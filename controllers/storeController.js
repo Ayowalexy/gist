@@ -138,6 +138,11 @@ const deleteProperty = asyncHandler(async (req, res) => {
   );
 });
 
+const allProperties = asyncHandler(async(req, res) => {
+  const properties = await Property.find();
+  res.status(200).json(properties);
+})
+
 module.exports = {
   createStore,
   getStore,
@@ -152,4 +157,5 @@ module.exports = {
   updateProperty,
   deleteProperty,
   getSingleStore,
+  allProperties,
 };
