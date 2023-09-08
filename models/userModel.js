@@ -125,6 +125,15 @@ const userSchema = new Schema(
         ref: "property",
       },
     ],
+    deviceToken: {
+      type: String
+    },
+    contact: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
   },
   {
     timestamps: true,

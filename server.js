@@ -100,6 +100,9 @@ io.on('connection', socket => {
     socket.on('sendMessageToRoom', async ({ roomName, message }) => {
         const senderId = roomName.split('-')[0];
         const receiverId = roomName.split('-')[1];
+
+        console.log(roomName, 'room', senderId, receiverId);
+
         const allMessages = await saveNewMessage(message, senderId, receiverId);
         io.to(roomName).emit('newMessage', allMessages);
     });

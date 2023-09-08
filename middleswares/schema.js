@@ -30,6 +30,7 @@ const userAccountSignupSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
   isHandyMan: Joi.boolean().required(),
+  deviceToken: Joi.string().optional()
 });
 
 const postSchema = Joi.object({
@@ -115,6 +116,7 @@ const updatehandyManWorkHourSchema = Joi.object({
 const bankAccountSchema = Joi.object({
   account_number: Joi.string().required(),
   account_bank: Joi.string().required(),
+  id: Joi.string().required()
 });
 
 const updateProfileSchema = Joi.object({
@@ -160,6 +162,17 @@ const propertiesSchema = Joi.object({
   property_images: Joi.array().items(Joi.string().required()).required(),
 });
 
+const contactSchema = Joi.object({
+  _id: Joi.string().required(),
+  userId: Joi.string().required()
+})
+
+const messsageSchema = Joi.object({
+  pushMessage: Joi.string().required(),
+  userId: Joi.string().required(),
+  mailMessage: Joi.string().required()
+})
+
 module.exports = {
   profileInformationSchema,
   userAccountSignupSchema,
@@ -182,4 +195,6 @@ module.exports = {
   storeSchema,
   itemSchema,
   propertiesSchema,
+  contactSchema,
+  messsageSchema
 };

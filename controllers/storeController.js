@@ -31,12 +31,10 @@ const getStore = asyncHandler(async (req, res) => {
   res.status(200).json(user.store);
 });
 
-const getSingleStore = asyncHandler(
-  async (req, res) => {
-    const stores = await Store.find({ _id: req.params.id }).populate("items");
-    res.status(200).json(stores);
-  }
-);
+const getSingleStore = asyncHandler(async (req, res) => {
+  const stores = await Store.find({ _id: req.params.id }).populate("items");
+  res.status(200).json(stores);
+});
 
 const getStores = asyncHandler(async (req, res) => {
   const stores = await Store.find().populate("items");
@@ -62,7 +60,7 @@ const addItem = asyncHandler(async (req, res) => {
     );
     if (hasItem)
       throw new Error("Item with name " + value.item_name + " already exists ");
-    const item = await Item.create(value);
+    const item = await Item.create({ ...value, user: req.user._id.toString() });
 
     store.items.push(item);
     await store.save();
@@ -105,7 +103,7 @@ const addNewProperty = asyncHandler(async (req, res) => {
   const { error, value } = propertiesSchema.validate(payload);
   if (error) throw error.details[0].message;
 
-  const property = await Property.create(value);
+  const property = await Property.create({...value, value: req.user._id.toString()});
 
   await User.findByIdAndUpdate(
     { _id: req.user._id },
@@ -138,10 +136,10 @@ const deleteProperty = asyncHandler(async (req, res) => {
   );
 });
 
-const allProperties = asyncHandler(async(req, res) => {
+const allProperties = asyncHandler(async (req, res) => {
   const properties = await Property.find();
   res.status(200).json(properties);
-})
+});
 
 module.exports = {
   createStore,
