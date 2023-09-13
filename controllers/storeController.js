@@ -103,7 +103,7 @@ const addNewProperty = asyncHandler(async (req, res) => {
   const { error, value } = propertiesSchema.validate(payload);
   if (error) throw error.details[0].message;
 
-  const property = await Property.create({...value, value: req.user._id.toString()});
+  const property = await Property.create({...value, user: req.user._id.toString()});
 
   await User.findByIdAndUpdate(
     { _id: req.user._id },

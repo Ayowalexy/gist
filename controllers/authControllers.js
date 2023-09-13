@@ -122,7 +122,7 @@ const getPasswordResetToken = asyncHandlers(async (req, res) => {
         const API_KEY = process.env.SG_API;
 
         sgMail.setApiKey(API_KEY);
-        const otp = otpGenerator.generate(6, { digits: true, specialChars: false })
+        const otp = otpGenerator.generate(6, { digits: true, specialChars: false, lowerCaseAlphabets: false, upperCaseAlphabets: false })
 
         const capitalizeOtp = otp.toString().toUpperCase();
 
