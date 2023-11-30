@@ -12,6 +12,9 @@ const {
 } = require("../middleswares/schema");
 const sendNotification = require("../utils/sendNotification");
 const sendEmail = require("../utils/sendEmail");
+const { CHARGE_PERCENT, getAdminFee } = require("../constants/pricing");
+const sendHandyManPaymentEmail = require("../emails/handy-man-part-payment");
+const formatNumber = require("../utils/format-currency");
 
 const getAllHandyman = asyncHandler(async (req, res) => {
   const allHandyMan = await User.find({ isHandyMan: true });
@@ -71,8 +74,13 @@ const hireHandyMan = asyncHandler(async (req, res) => {
         throw new Error("Insufficient balance");
       }
 
+      const amountHandyManPaid = Math.floor(
+        Number(value.amount) - getAdminFee(value.amount, CHARGE_PERCENT)
+      );
+
       handyMan.accountBalance =
-        Number(handyMan.accountBalance) + Number(value.amount);
+        Number(handyMan.accountBalance) + amountHandyManPaid;
+
       client.accountBalance =
         Number(client.accountBalance) - Number(value.amount);
 
@@ -82,7 +90,7 @@ const hireHandyMan = asyncHandler(async (req, res) => {
         ...value,
         chargePerHour: handyMan.serviceCharge,
         totalAmount: totalAmount,
-        partPayment: Math.floor(totalAmount / 2),
+        partPayment: amountHandyManPaid, //Math.floor(totalAmount / 2),
         status: "hired",
         handyManId: handyMan,
         clientId: client,
@@ -97,6 +105,16 @@ const hireHandyMan = asyncHandler(async (req, res) => {
         type: "hire",
       });
 
+      await sendHandyManPaymentEmail(
+        handyMan.email,
+        amountHandyManPaid,
+        handyMan.serviceCategory,
+        `${handyMan.firstName} ${handyMan.lastName}`,
+        `${client.firstName} ${client.lastName}`
+      );
+
+      await sendNotification("You've been paid", handyMan.deviceToken);
+
       await handyManNotification.save();
       await clientNotification.save();
       await newHire.save();
@@ -104,6 +122,7 @@ const hireHandyMan = asyncHandler(async (req, res) => {
       handyMan.notifications.push(handyManNotification);
       client.hires.push(handyMan);
       client.notifications.push(clientNotification);
+      client.canUserWithdraw = false;
       await client.save();
       await handyMan.save();
 

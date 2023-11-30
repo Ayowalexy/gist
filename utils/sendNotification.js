@@ -1,7 +1,7 @@
 const { Expo } = require("expo-server-sdk");
 let expo = new Expo();
 
-const sendNotification = async (message, deviceToken) => {
+const sendNotification = async (message, deviceToken, title) => {
   let messages = [];
 
   if (!Expo.isExpoPushToken(deviceToken)) {
@@ -11,6 +11,7 @@ const sendNotification = async (message, deviceToken) => {
     to: deviceToken,
     sound: "default",
     body: message,
+    title: title ? title : "We have an update",
     data: { withSome: "data" },
   });
   let chunks = expo.chunkPushNotifications(messages);

@@ -172,7 +172,8 @@ const getProfileInformation = asyncHandlers(async (req, res) => {
     accountBalance: user.accountBalance,
     serviceCategory: user.serviceCategory,
     store: user.store,
-    properties: user.properties
+    properties: user.properties,
+    canUserWithdraw: user.canUserWithdraw
   };
   const data = {
     user: userData,

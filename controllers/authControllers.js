@@ -168,7 +168,7 @@ const getPasswordResetToken = asyncHandlers(async (req, res) => {
                 // console.log(res)
             })
             .catch(err => {
-                console.og(err)
+                console.log(err)
             })
 
         res

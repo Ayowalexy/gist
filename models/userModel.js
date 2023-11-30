@@ -128,6 +128,10 @@ const userSchema = new Schema(
     deviceToken: {
       type: String
     },
+    canUserWithdraw: {
+      type: Boolean,
+      default: false
+    },
     contact: [
       {
         type: Schema.Types.ObjectId,
