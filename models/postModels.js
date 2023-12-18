@@ -9,16 +9,21 @@ const postSchema = new Schema({
         ref: Comment
     }],
     post: String,
-    name: String,
-    createdBy: String,
-    userImg: String,
+    user: {
+        ref: "user",
+        type: Schema.Types.ObjectId
+    },
     images: [{
         type: String
     }],
     likes: {
         default: 0, 
         type: Number
-    }
+    },
+    likedBy: [{
+        type: Schema.Types.ObjectId,
+        ref: "user"
+    }]
 }, {
     timestamps: true
 })

@@ -35,25 +35,20 @@ const userAccountSignupSchema = Joi.object({
 
 const postSchema = Joi.object({
   post: Joi.string().required(),
-  name: Joi.string().required(),
   createdBy: Joi.string().required(),
   postImgs: Joi.string().required(),
 });
 
 const commentSchema = Joi.object({
-  userImg: Joi.string(),
-  // .required(),
-  name: Joi.string().required(),
+  user: Joi.string(),
   comment: Joi.string().required(),
-  postId: Joi.string().required(),
-  createdBy: Joi.string().required(),
+  post: Joi.string().required(),
 });
 
 const replySchema = Joi.object({
-  name: Joi.string().required(),
+  user: Joi.string().required(),
   reply: Joi.string().required(),
-  commentId: Joi.string().required(),
-  createdBy: Joi.string().required(),
+  comment: Joi.string().required(),
 });
 
 const emailSchema = Joi.object({

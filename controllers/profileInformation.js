@@ -128,12 +128,22 @@ const addImages = asyncHandlers(async (req, res) => {
 });
 
 const getProfileInformation = asyncHandlers(async (req, res) => {
-  const user = await User.findById({ _id: req.params.id }).populate({
-    path: "post store",
-    populate: {
-      path: "items",
-    },
-  }).populate('properties')
+  const user = await User.findById({ _id: req.params.id })
+    .populate({
+      path: "store",
+      populate: {
+        path: "items",
+      },
+    })
+    .populate({
+      path: "post",
+      populate: {
+        path: "user",
+        select: "userImg",
+      },
+    })
+    .populate("properties");
+
   const post = await Post.find({
     createdBy: { $exists: true, $in: [`${req.params.id}`] },
   });
@@ -173,7 +183,7 @@ const getProfileInformation = asyncHandlers(async (req, res) => {
     serviceCategory: user.serviceCategory,
     store: user.store,
     properties: user.properties,
-    canUserWithdraw: user.canUserWithdraw
+    canUserWithdraw: user.canUserWithdraw,
   };
   const data = {
     user: userData,
