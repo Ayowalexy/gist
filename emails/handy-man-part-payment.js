@@ -1,20 +1,16 @@
-const sgMail = require('@sendgrid/mail');
+const sendMail = require("../app");
 
-
-const sendHandyManPaymentEmail =  async (email, amount, service, name, client) => {
-    const API_KEY = process.env.SG_API;
-
-        sgMail.setApiKey(API_KEY);
-       
-        const message = {
-            to: email,
-            from: {
-                name: `YOUR PART PAYMENT FOR ${service} HAS BEEN PAID`,
-                email: "goldenimperialswifttech@gmail.com"
-            },
-            text: "Hello Sample text",
-            subject: "Verify OTP",
-            html: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+const sendHandyManPaymentEmail = async (
+  email,
+  amount,
+  service,
+  name,
+  client
+) => {
+  await sendMail(
+    email,
+    `YOUR PART PAYMENT FOR ${service} HAS BEEN PAID`,
+    `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
                     <div style="margin:50px auto;width:70%;padding:20px 0">
                         <div style="border-bottom:1px solid #eee">
                         <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Gist</a>
@@ -33,15 +29,7 @@ const sendHandyManPaymentEmail =  async (email, amount, service, name, client) =
                         </div>
                     </div>
                     </div>`
-        }
+  );
+};
 
-        sgMail.send(message)
-            .then(res => {
-                // console.log(res)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-}
-
-module.exports = sendHandyManPaymentEmail
+module.exports = sendHandyManPaymentEmail;

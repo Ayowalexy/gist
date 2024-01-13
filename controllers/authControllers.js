@@ -2,6 +2,7 @@ const asyncHandlers = require("express-async-handler");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sendMail = require("../app");
 const {
   userAccountSignupSchema,
   emailSchema,
@@ -9,7 +10,6 @@ const {
   passwordSchema,
   updateProfileSchema,
 } = require("../middleswares/schema");
-const sgMail = require("@sendgrid/mail");
 const otpGenerator = require("otp-generator");
 
 const createAccount = asyncHandlers(async (req, res) => {
@@ -100,7 +100,6 @@ const getPasswordResetToken = asyncHandlers(async (req, res) => {
   if (user) {
     const API_KEY = process.env.SG_API;
 
-    sgMail.setApiKey(API_KEY);
     const otp = otpGenerator.generate(6, {
       digits: true,
       specialChars: false,
@@ -123,41 +122,27 @@ const getPasswordResetToken = asyncHandlers(async (req, res) => {
         ? user.firstName.concat(" ", user.lastName)
         : "Chief";
 
-    const message = {
-      to: user.email,
-      from: {
-        name: "Gist Support Team",
-        email: "goldenimperialswifttech@gmail.com",
-      },
-      text: "Hello Sample text",
-      subject: "Verify OTP",
-      html: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
-                    <div style="margin:50px auto;width:70%;padding:20px 0">
-                        <div style="border-bottom:1px solid #eee">
-                        <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Gist</a>
-                        </div>
-                        <p style="font-size:1.1em">Hi ${name},</p>
-                        <p>Thank you for choosing Gist. Use the following OTP to complete your Sign Up procedures. OTP is valid for 5 minutes</p>
-                        <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${capitalizeOtp}</h2>
-                        <p style="font-size:0.9em;">Regards,<br />Gist</p>
-                        <hr style="border:none;border-top:1px solid #eee" />
-                        <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
-                        <p>Gist Inc</p>
-                        <p>1600 Amphitheatre Parkway</p>
-                        <p>Lagos, Nigeria</p>
-                        </div>
-                    </div>
-                    </div>`,
-    };
-
-    sgMail
-      .send(message)
-      .then((res) => {
-        // console.log(res)
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await sendMail(
+      user.email,
+      "Verify OTP",
+      `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+          <div style="margin:50px auto;width:70%;padding:20px 0">
+              <div style="border-bottom:1px solid #eee">
+              <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Gist</a>
+              </div>
+              <p style="font-size:1.1em">Hi ${name},</p>
+              <p>Thank you for choosing Gist. Use the following OTP to complete your Sign Up procedures. OTP is valid for 5 minutes</p>
+              <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${capitalizeOtp}</h2>
+              <p style="font-size:0.9em;">Regards,<br />Gist</p>
+              <hr style="border:none;border-top:1px solid #eee" />
+              <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+              <p>Gist Inc</p>
+              <p>1600 Amphitheatre Parkway</p>
+              <p>Lagos, Nigeria</p>
+              </div>
+          </div>
+          </div>`
+    );
 
     res.status(201).json({
       status: "success",
@@ -272,7 +257,7 @@ const resetPassword = asyncHandlers(async (req, res) => {
 });
 
 const updateProfile = asyncHandlers(async (req, res) => {
-  const userImg = req.file?.path || ""
+  const userImg = req.file?.path || "";
 
   const { error, value } = updateProfileSchema.validate({
     ...req.body,
