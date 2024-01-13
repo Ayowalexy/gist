@@ -63,9 +63,4 @@ const sendMail = async (email, subject, html) => {
   // }
 };
 
-sendMail(
-  'seinde4@gmail.com',
-  'HELLO WORLD',
-  '<h1>Hello</h1>'
-)
 module.exports = sendMail;

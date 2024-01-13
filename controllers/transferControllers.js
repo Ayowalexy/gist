@@ -16,7 +16,7 @@ const crypto = require("crypto");
 const { getAdminFee, CHARGE_PERCENT } = require("../constants/pricing");
 // const flw = new Flutterwave(process.env.FLW_PUBLIC_KEY, process.env.FLW_SECRET_KEY);
 
-const PAYSTACK_SK = process.env.PAYSTACK_SK;
+const PAYSTACK_SK = process.env.PAYSTACK_SK_LIVE;
 
 const getAllBanks = asyncHandler(async (req, res) => {
   const response = await axios(`${process.env.BASE_API_URL}/banks/NG`, {
