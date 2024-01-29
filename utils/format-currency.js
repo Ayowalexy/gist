@@ -1,4 +1,8 @@
 
+
+let DECIMAL_SEPARATOR = '.';
+let GROUP_SEPARATOR = ',';
+
 const formatNumber = (valString, mode = false) => {
     if (!valString) {
         return '';
@@ -25,5 +29,23 @@ const formatNumber = (valString, mode = false) => {
         return res;
     }
 };
+
+
+const unFormatNumber = (val) => {
+    if (typeof val === 'number') {
+      return val;
+    }
+    if (!val) {
+      return '';
+    }
+    val = val.replace(/^0+/, '');
+  
+    if (GROUP_SEPARATOR === ',') {
+      return val.replace(/,/g, '');
+    } else {
+      return val.replace(/\./g, '');
+    }
+  };
+  
 
 module.exports = formatNumber

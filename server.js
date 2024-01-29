@@ -11,6 +11,7 @@ const logger = require('./middleswares/logger')
 const session = require('express-session')
 const Message = require('./models/message')
 const { Server } = require("socket.io");
+const cors = require('cors')
 const { createServer } = require("http");
 
 //import routes
@@ -43,6 +44,7 @@ const io = new Server(httpServer, {
 app.use(session(sessionConfig))
 app.use(express.json());
 app.use(compression());
+app.use(cors())
 app.use(express.urlencoded({ limit: "500mb", extended: true }));
 
 if (process.env.NODE_ENV === "development") {

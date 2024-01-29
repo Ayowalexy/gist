@@ -1,4 +1,5 @@
 const sendMail = require("../app");
+const formatNumber = require("../utils/format-currency");
 
 const sendHandyManPaymentEmail = async (
   email,
@@ -17,7 +18,7 @@ const sendHandyManPaymentEmail = async (
                         </div>
                         <p style="font-size:1.1em">Hi ${name},</p> <br />
                         <p>
-                        Trust this finds you well. A total amount of ${amount} has been paid into your account by ${client} for your serice - ${service} which you
+                        Trust this finds you well. A total amount of ₦${formatNumber(amount)} has been paid into your account by ${client} for your serice - ${service} which you
                          are due to start right away. Be informed, you won't be able to withdraw the money until the service is complete.
                         </p>
                         <p style="font-size:0.9em;">Regards,<br />Gist</p>

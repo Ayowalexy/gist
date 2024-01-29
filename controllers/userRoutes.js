@@ -122,7 +122,7 @@ const hireHandyMan = asyncHandler(async (req, res) => {
       handyMan.notifications.push(handyManNotification);
       client.hires.push(handyMan);
       client.notifications.push(clientNotification);
-      client.canUserWithdraw = false;
+      handyMan.canUserWithdraw = false;
       await client.save();
       await handyMan.save();
 
@@ -165,6 +165,30 @@ const cancelHandyManHire = asyncHandler(async (req, res) => {
     hire.status = value.status;
     hire.cancelReason = value.reason;
     await hire.save();
+    const user = await User.findById({ _id: hire?.clientId });
+    const handyman = await User.findById({ _id: hire?.handyManId });
+    user.accountBalance = user.accountBalance + hire.totalAmount / 2;
+    handyman.accountBalance = handyman.accountBalance - hire.partPayment;
+    handyman.canUserWithdraw = true;
+
+    const handyManNotification = new Notification({
+      title: `You just canceled a ${hire.jobTitle} from ${user?.firstName} ${user?.lastName}`,
+      type: "hire",
+    });
+
+    const clientNotification = new Notification({
+      title: `${handyman.firstName} ${handyman.lastName} just canceled a ${hire.jobTitle} service and your wallet has been credited with your initial payment`,
+      type: "hire",
+    });
+    await handyManNotification.save();
+    await clientNotification.save();
+
+    user.notifications.push(clientNotification);
+    handyman.notifications.push(handyManNotification);
+
+    await handyman.save();
+    await user.save();
+
     const data = {
       jobDescription: hire.jobDescription,
       jobTitle: hire.jobTitle,
@@ -289,6 +313,7 @@ const getOneHireDetails = asyncHandler(async (req, res) => {
           state: worker.state,
           city: worker.city,
           no_of_clients: worker.clients.length || 0,
+          phone: worker.phoneNumber
         },
         hire,
       };

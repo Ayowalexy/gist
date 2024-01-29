@@ -51,7 +51,7 @@ const verifyBankAccount = asyncHandler(async (req, res) => {
       const response = await axios(url, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SK}`,
+          Authorization: `Bearer ${PAYSTACK_SK}`,
         },
       });
       if (response.data.status) {
@@ -225,16 +225,16 @@ const webhook = asyncHandler(async (req, res) => {
       await user.save();
     } else if (data?.event === "transfer.success") {
       const ref_id = Array.isArray(reference?.split("_"))
-        ? reference?.split("_")[2]
+        ? reference?.split("_")[1]
         : "";
-      const transaction = await Transaction.findById({ _id: ref_id }).populate(
+      const transaction = await Transaction.findOne({ reference }).populate(
         "user"
       );
       if (transaction) {
         const user = transaction.user;
-        user.total_balance = user.total_balance - amount;
-        user.accountBalance = user.accountBalance - amount;
-        user.total_withdrawal = user.total_withdrawal + amount;
+        user.total_balance = user.total_balance - (amount / 100);
+        user.accountBalance = user.accountBalance - (amount / 100);
+        user.total_withdrawal = user.total_withdrawal + (amount / 100) ;
         transaction.verified = true;
         await user.save();
         await transaction.save();
@@ -259,7 +259,7 @@ const addBankAccount = asyncHandler(async (req, res) => {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SK}`,
+          Authorization: `Bearer ${PAYSTACK_SK}`,
         },
         data: data,
       }
@@ -337,33 +337,37 @@ const withdraw = asyncHandler(async (req, res) => {
     if (user.accountBalance < Number(req.body.amount)) {
       throw new Error("You don't have upto this amount in your account");
     }
-    const ref = `${user.firstName}_${user.lastName}_${transaction._id}`;
+    const ref = `${user.firstName}_${user?._id}_${user.lastName}_${Math.ceil(Math.random() * 10000000000)}`;
     transaction.reference = ref;
     await transaction.save();
 
     const data = {
       source: "balance",
       reason: "handy man withdraw",
-      amount: Number(req.body.amount),
+      amount: Number(req.body.amount) * 100,
       reference: ref,
       recipient: user.bank.recipient_code,
-      account_number: user.bank.account_number,
-      bank_code: user.bank.account_bank,
     };
-
-    const recipient_resp = await axios("https://api.paystack.co/transfer", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.PAYSTACK_SK}`,
-      },
-      data: data,
-    });
-
-    res.status(200).json({
-      status: "success",
-      data: "Withdraw has been queued",
-      meta: {},
-    });
+    // https://gist-mwf3.onrender.com/api/bank/fund
+    try {
+      const recipient_resp = await axios("https://api.paystack.co/transfer", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${PAYSTACK_SK}`,
+        },
+        data: data,
+      });
+      console.log(recipient_resp.data)
+  
+      res.status(200).json({
+        status: "success",
+        data: "Withdraw has been queued",
+        meta: {},
+      });
+    } catch(e){
+      console.log(e.response?.data)
+      throw e?.response?.data?.message || "An error occured"
+    }
   } else {
     throw new Error(
       "You currently cannot withdraw as you have pending service"
